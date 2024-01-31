@@ -6,7 +6,7 @@ matrix = [[c for c in row] for row in input]
 height = len(matrix)
 width = len(matrix[0])
 
-DIR8 = [(1, -1), (-1, -1), (1, 1), (-1, 1), (1, 0), (-1, 0), (0, -1), (0, 1)]
+BITS = [(1, -1), (-1, -1), (1, 1), (-1, 1), (1, 0), (-1, 0), (0, -1), (0, 1)]
 
 def solve():
     p1,p2 = 0,0
@@ -18,7 +18,7 @@ def solve():
         for x, c in enumerate(row + ['.']):
             if c.isdigit():
                 num = 10*num + int(c)
-                for dx,dy in DIR8:
+                for dx,dy in BITS:
                     if 0 <= y + dy < height and 0 <= x + dx < width:
                         cc = matrix[y + dy][x + dx]
                         if not cc.isdigit() and cc != '.':
