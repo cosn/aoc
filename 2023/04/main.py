@@ -17,9 +17,8 @@ def solve():
         if len(matches) > 0:
             points += pow(2, len(matches)-1)
 
-            for _ in range(copies[i]):
-                for j in range(len(matches)):
-                    copies[i+j+1] += 1
+            for j in range(len(matches)):
+                copies[i+j+1] += copies[i]
     
     print(points)
     print(sum(copies))
