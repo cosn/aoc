@@ -1,13 +1,14 @@
+import re
+
 input = [i.strip() for i in open("input","r").readlines()]
 
 def solve():
     points = 0;
-    for card in input:
-        _, cm = [i.strip() for i in card.split(':')]
-        c, m = cm.split('|')
-
-        c_set = set(int(n) for n in c.split(' ') if n)
-        m_set = set(int(n) for n in m.split(' ') if n)
+    for line in input:
+        numbers = re.search(f"Card\s+(\d+):\s+([\d\s]+)\s+\|\s+([\d\s]+)", line)
+        
+        c_set = set(int(n) for n in numbers.group(2).split(' ') if len(n) > 0)
+        m_set = set(int(n) for n in numbers.group(3).split(' ') if len(n) > 0)
         
         matches = c_set.intersection(m_set)
         
