@@ -18,6 +18,14 @@ class Map:
 
         return location
 
+    def traverse_pairs(self, seeds) -> int:
+        locations = list()
+
+        for s in range(seeds[0], seeds[0]+seeds[1]):
+            locations.append(self.traverse(s))
+
+        return min(locations)
+
     def _find(self, entries, target) -> int:
         res = target
         for dest, src, len in entries:
@@ -33,6 +41,10 @@ input = [i.strip() for i in open('input', 'r').readlines()]
 def solve():
     seeds = [int(i) for i in input[0].split(':')[1].split(' ') if len(i) > 0]
     
+    seed_pairs = list()
+    for i in range(0, len(seeds), 2):
+        seed_pairs.append((seeds[i], seeds[i+1]))
+
     m = Map()
     i = 2
 
@@ -48,5 +60,6 @@ def solve():
         i += 1
 
     print(min(map(m.traverse, seeds)))
+    print(min(map(m.traverse_pairs, seed_pairs)))
               
 solve()
