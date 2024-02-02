@@ -1,29 +1,32 @@
+from collections import defaultdict
 class Map:
     def __init__(self):
-        self.pairs = {}
+        self.pairs = defaultdict(list)
     
     def set(self, mapping, line):
-        print(mapping, line)
-        
         fro, _, to = mapping.split('-')
-        if self.pairs.get((fro, to)) is None:
-            self.pairs[(fro, to)] = {}
-        
-        destination, source, length = map(int, line.split())
-        
-        for i in range(length):
-            self.pairs[(fro, to)][source + i] = destination + i
+        self.pairs[(fro, to)].append(list(map(int, line.split())))
         
     def traverse(self, seed) -> int:
-        soil = self.pairs.get(('seed', 'soil')).get(seed, seed)
-        fertilizer = self.pairs.get(('soil', 'fertilizer')).get(soil, soil)
-        water = self.pairs.get(('fertilizer', 'water')).get(fertilizer, fertilizer)
-        light = self.pairs.get(('water', 'light')).get(water, water)
-        temperature = self.pairs.get(('light', 'temperature')).get(light, light)
-        humidity = self.pairs.get(('temperature', 'humidity')).get(temperature, temperature)
-        location = self.pairs.get(('humidity', 'location')).get(humidity, humidity)
+        soil = self._find(self.pairs[('seed', 'soil')], seed)
+        fertilizer = self._find(self.pairs[('soil', 'fertilizer')], soil)
+        water = self._find(self.pairs[('fertilizer', 'water')], fertilizer)
+        light = self._find(self.pairs[('water', 'light')], water)
+        temperature = self._find(self.pairs[('light', 'temperature')], light)
+        humidity = self._find(self.pairs[('temperature', 'humidity')], temperature)
+        location = self._find(self.pairs[('humidity', 'location')], humidity)
 
         return location
+
+    def _find(self, entries, target) -> int:
+        res = target
+        for dest, src, len in entries:
+                if target < src or target > src + (len - 1):
+                    continue
+                else:
+                    res = dest + (target - src)
+                    break
+        return res
 
 input = [i.strip() for i in open('input', 'r').readlines()]
 
