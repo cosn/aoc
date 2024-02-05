@@ -12,25 +12,48 @@ TYPES = [
     [5], # five of a kind
 ]
 
-def value(hand) -> int:
+def order(part=1):
     order = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
 
+    if part == 2:
+        order = ['J'] + order
+
+    return order
+
+def value(hand, part=1) -> int:
     score = 0
     for c in hand:
-        score += order.index(c)
+        score += order(part).index(c)
         score *= 100
 
     return score
 
-def solve():
+def replace_joker(hand) -> str:
+    if 'J' not in hand:
+        return hand
+    if hand == 'J' * 5:
+        return 'A' * 5
+    else:
+        cards = Counter(hand)
+        mc = cards.most_common()
+        if mc[0][0] == "J":
+            mc = mc[1:]
+
+        top = [n for n in mc if n[1] == mc[0][1]]
+        tmc = sorted([(order(2).index(n[0]), n) for n in top])
+        r = tmc[-1][1][0]
+
+        return hand.replace('J', r)
+
+def solve(part=1):
     hands = list()
     for line in input:
         hand, bid = line.split()
-        typ = sorted(Counter(hand).values(), reverse = True)
+        typ = sorted(Counter(replace_joker(hand)).values(), reverse = True)
         type_rank = TYPES.index(typ) + 1
-        hand_val = value(hand)
+        hand_val = value(hand, part)
 
-        score = pow(1000, 1000) * type_rank + hand_val 
+        score = pow(1000, 1000) * type_rank + hand_val
         hands.append((hand, score, bid))
    
     winnings = 0
@@ -39,4 +62,5 @@ def solve():
     
     print(winnings)
 
-solve()
+solve(1)
+solve(2)
